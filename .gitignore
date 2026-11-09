@@ -1,0 +1,17 @@
+# Obsidian 工作区
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 冲突文件
+*.conflict
+
+# 临时文件
+*.tmp
+*.bak
+*~

@@ -1,0 +1,13 @@
+{
+  "attachmentFolderPath": "03-知识库/99-附件",
+  "newFileLocation": "current",
+  "newFileFolderPath": "03-知识库/01-最佳实践",
+  "useMarkdownLinks": false,
+  "newLinkFormat": "shortest",
+  "alwaysUpdateLinks": true,
+  "showLineNumber": true,
+  "spellcheck": false,
+  "defaultViewMode": "preview",
+  "livePreview": true,
+  "showPropertiesInSource": true
+}
