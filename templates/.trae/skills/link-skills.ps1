@@ -4,10 +4,10 @@
 
 $ErrorActionPreference = "Stop"
 
-# Vault 路径（脚本所在目录向上三级）
+# Vault 路径（脚本在 .trae/skills/ 下，向上两级是 vault 根目录）
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $vaultSkills = $scriptDir
-$vaultDir = (Resolve-Path (Join-Path $scriptDir "..\..\..")).Path
+$vaultDir = (Resolve-Path (Join-Path $scriptDir "..\..")).Path
 
 # TRAE 全局 skills 目录
 $traeSkills = Join-Path $env:USERPROFILE ".trae-cn\skills"
