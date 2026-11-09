@@ -7,12 +7,15 @@
 
 ## 执行前确认
 
-请向用户确认以下信息，如未指定则使用默认值：
+以下信息已预置默认值，如用户无特殊要求可直接使用。如需修改请询问用户。
 
 | 配置项 | 默认值 | 说明 |
 |---|---|---|
 | Vault 路径 | `D:\Work Space\第二大脑知识库` | Obsidian 仓库本地路径 |
-| Git 远程仓库 | 无 | 如需同步，提供仓库 URL；不需要则跳过 |
+| Git 远程仓库 | `https://github.com/dudunewtall761121/ai-team.git` | Vault 同步仓库，可直接使用 |
+| Git 用户名 | `dudunewtall761121` | 提交者用户名 |
+| Git 邮箱 | `dudunewtall761121@users.noreply.github.com` | GitHub noreply 邮箱，不暴露真实邮箱 |
+| 默认分支 | `master` | 仓库主分支名 |
 | Obsidian 路径 | 自动检测 | 已安装则自动打开 |
 
 ---
@@ -107,11 +110,14 @@ Get-ChildItem -Path $vaultPath -Recurse -File |
 
 ### 5.2 确认远程仓库
 
-询问用户：
+已预置仓库 URL，直接使用。如需切换到其他仓库，询问用户后修改：
 
-1. **是否已有远程仓库？**
-   - 有 → 提供仓库 URL（如 `https://github.com/用户名/仓库名.git`）
-   - 没有 → 引导用户在 GitHub 创建空仓库（不要勾选初始化 README），然后提供 URL
+```powershell
+$remoteUrl = "https://github.com/dudunewtall761121/ai-team.git"
+$defaultBranch = "master"
+```
+
+> 如果用户要使用其他仓库，引导在 GitHub 创建空仓库（不要勾选初始化 README），替换 `$remoteUrl` 的值。
 
 ### 5.3 确认认证方式
 
@@ -132,15 +138,15 @@ Get-ChildItem -Path $vaultPath -Recurse -File |
 ```powershell
 cd $vaultPath
 
-# 询问用户的 git 用户名和邮箱后填入
-$gitUserName = "<用户提供的用户名>"
-$gitUserEmail = "<用户提供的邮箱>"
+# 已预置身份信息，直接使用
+$gitUserName = "dudunewtall761121"
+$gitUserEmail = "dudunewtall761121@users.noreply.github.com"
 
 git init
 # 用 --local 只写入当前仓库，不污染全局配置
 git config --local user.name $gitUserName
 git config --local user.email $gitUserEmail
-git config --local init.defaultBranch main
+git config --local init.defaultBranch $defaultBranch
 git config --local pull.rebase true
 git config --local credential.helper manager
 ```
@@ -150,9 +156,9 @@ git config --local credential.helper manager
 ```powershell
 git add -A
 git commit -m "feat: 初始化知识库"
-git branch -M main
+git branch -M $defaultBranch
 git remote add origin $remoteUrl
-git push -u origin main
+git push -u origin $defaultBranch
 ```
 
 **如果 push 失败（认证问题）**：
@@ -238,7 +244,7 @@ A：执行以下命令生成密钥并添加到 GitHub：
 ```powershell
 # 检查是否已有密钥
 if (-not (Test-Path "$env:USERPROFILE\.ssh\id_ed25519.pub")) {
-    ssh-keygen -t ed25519 -C "<用户邮箱>" -f "$env:USERPROFILE\.ssh\id_ed25519" -N '""'
+    ssh-keygen -t ed25519 -C "dudunewtall761121@users.noreply.github.com" -f "$env:USERPROFILE\.ssh\id_ed25519" -N '""'
 }
 # 显示公钥，复制后添加到 GitHub → Settings → SSH and GPG keys
 Get-Content "$env:USERPROFILE\.ssh\id_ed25519.pub"
