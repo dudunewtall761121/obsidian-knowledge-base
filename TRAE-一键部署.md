@@ -94,21 +94,45 @@ Get-ChildItem -Path $vaultPath -Recurse -File |
 - `03-知识库\06-项目索引\00-项目总览.md`
 - `.obsidian\app.json`
 - `.obsidian\templates.json`
+- `.trae\skills\` （技能目录）
 
 ---
 
-## 步骤 5（可选）：配置 Git 同步
+## 步骤 5：链接技能到 TRAE
+
+将 Vault 中的技能链接到 TRAE 全局目录，这样 Agent 才能识别和调用。
+
+```powershell
+& "$vaultPath\.trae\skills\link-skills.ps1"
+```
+
+预期输出：
+```
+Vault skills: D:\Work Space\第二大脑知识库\.trae\skills
+TRAE skills:  C:\Users\...\.trae-cn\skills
+
+[LINK] obsidian-knowledge-base
+[LINK] research-guide
+...
+Done. Linked 7 skills.
+```
+
+> 原理：TRAE 从 `~/.trae-cn/skills/` 加载技能。脚本用 Windows Directory Junction 把 Vault 里的技能映射过去，无需复制，Vault 更新后技能自动同步。
+
+---
+
+## 步骤 6（可选）：配置 Git 同步
 
 > 本步骤需要与用户交互确认。用提问工具收集以下信息后再执行。
 
-### 5.1 确认是否需要 Git 同步
+### 6.1 确认是否需要 Git 同步
 
 询问用户：是否需要将 Vault 同步到远程 Git 仓库？
 
-- **需要** → 继续 5.2
-- **不需要** → 跳过整个步骤 5，直接到步骤 6
+- **需要** → 继续 6.2
+- **不需要** → 跳过整个步骤 6，直接到步骤 7
 
-### 5.2 确认远程仓库
+### 6.2 确认远程仓库
 
 已预置仓库 URL，直接使用。如需切换到其他仓库，询问用户后修改：
 
@@ -119,7 +143,7 @@ $defaultBranch = "master"
 
 > 如果用户要使用其他仓库，引导在 GitHub 创建空仓库（不要勾选初始化 README），替换 `$remoteUrl` 的值。
 
-### 5.3 确认认证方式
+### 6.3 确认认证方式
 
 询问用户选择哪种认证方式：
 
@@ -133,7 +157,7 @@ $defaultBranch = "master"
 2. 点击「Generate new token」→「Generate new token (classic)」
 3. 勾选 `repo` 权限，生成后复制保存（只显示一次）
 
-### 5.4 配置 Git 身份（仓库级，避免全局权限问题）
+### 6.4 配置 Git 身份（仓库级，避免全局权限问题）
 
 ```powershell
 cd $vaultPath
@@ -151,7 +175,7 @@ git config --local pull.rebase true
 git config --local credential.helper manager
 ```
 
-### 5.5 首次提交并推送
+### 6.5 首次提交并推送
 
 ```powershell
 git add -A
@@ -172,7 +196,7 @@ git push -u origin $defaultBranch
   git push -u origin main
   ```
 
-### 5.6 日常同步协议（写入 Vault 的 README 或告知用户）
+### 6.6 日常同步协议（写入 Vault 的 README 或告知用户）
 
 ```
 读取前：  git pull --rebase
@@ -185,7 +209,7 @@ git push -u origin $defaultBranch
 
 ---
 
-## 步骤 6：用 Obsidian 打开 Vault
+## 步骤 7：用 Obsidian 打开 Vault
 
 尝试自动检测并打开 Obsidian：
 
@@ -210,7 +234,7 @@ if ($obsidianExe) {
 
 ---
 
-## 步骤 7：告知用户后续操作
+## 步骤 8：告知用户后续操作
 
 部署完成后，向用户说明：
 
